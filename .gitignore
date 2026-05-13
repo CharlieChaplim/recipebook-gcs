@@ -2,9 +2,16 @@
 target/
 *.class
 
-# === ANGULAR / NODE (adicionar ao final) ===
+# Angular / Node
 node_modules/
 dist/
 .angular/
-*.env
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
 .DS_Store
+Thumbs.db
