@@ -1,0 +1,38 @@
+@if (carregando()) {
+  <p class="muted">Carregando receita...</p>
+} @else if (erro()) {
+  <div class="alert error">{{ erro() }}</div>
+  <a routerLink="/" class="secondary-button">Voltar à listagem</a>
+} @else if (receita()) {
+  <section class="detail-card">
+    <div class="detail-header">
+      <div>
+        <span class="badge">{{ receita()?.categoria }}</span>
+        <h1>{{ receita()?.nome }}</h1>
+        <p>{{ receita()?.tempoPreparo }} minutos • {{ receita()?.porcoes }} porções</p>
+      </div>
+      <div class="actions-inline">
+        <a routerLink="/" class="secondary-button">Voltar</a>
+        <button type="button" class="danger-button" (click)="excluir()" [disabled]="excluindo()">
+          {{ excluindo() ? 'Excluindo...' : 'Excluir' }}
+        </button>
+      </div>
+    </div>
+
+    <section>
+      <h2>Ingredientes</h2>
+      <ul class="ingredient-list">
+        @for (ingrediente of receita()?.ingredientes ?? []; track ingrediente) {
+          <li>{{ ingrediente }}</li>
+        }
+      </ul>
+    </section>
+
+    <section>
+      <h2>Modo de preparo</h2>
+      <p class="pre-line">{{ receita()?.modoPreparo }}</p>
+    </section>
+
+    <small class="muted">Cadastrada em {{ receita()?.dataCadastro | date:'dd/MM/yyyy HH:mm' }}</small>
+  </section>
+}
