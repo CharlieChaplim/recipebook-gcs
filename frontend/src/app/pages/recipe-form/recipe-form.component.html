@@ -1,0 +1,70 @@
+<section class="page-header">
+  <div>
+    <h1>Cadastrar receita</h1>
+    <p>Preencha todos os campos obrigatórios para salvar.</p>
+  </div>
+  <a routerLink="/" class="secondary-button">Voltar</a>
+</section>
+
+@if (erroApi) {
+  <div class="alert error">{{ erroApi }}</div>
+}
+
+<form class="form-card" [formGroup]="form" (ngSubmit)="salvar()">
+  <div class="form-grid">
+    <div class="field">
+      <label for="nome">Nome</label>
+      <input id="nome" formControlName="nome" placeholder="Nome da receita" />
+      @if (campoInvalido('nome')) { <small>Nome é obrigatório e deve ter no mínimo 3 caracteres.</small> }
+    </div>
+
+    <div class="field">
+      <label for="categoria">Categoria</label>
+      <select id="categoria" formControlName="categoria">
+        <option value="">Selecione</option>
+        @for (categoria of categorias; track categoria) {
+          <option [value]="categoria">{{ categoria }}</option>
+        }
+      </select>
+      @if (campoInvalido('categoria')) { <small>Categoria é obrigatória.</small> }
+    </div>
+
+    <div class="field">
+      <label for="tempoPreparo">Tempo de preparo (min)</label>
+      <input id="tempoPreparo" type="number" min="1" formControlName="tempoPreparo" />
+      @if (campoInvalido('tempoPreparo')) { <small>Informe pelo menos 1 minuto.</small> }
+    </div>
+
+    <div class="field">
+      <label for="porcoes">Porções</label>
+      <input id="porcoes" type="number" min="1" formControlName="porcoes" />
+      @if (campoInvalido('porcoes')) { <small>Informe pelo menos 1 porção.</small> }
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Ingredientes</label>
+    <div formArrayName="ingredientes" class="ingredients-list">
+      @for (ingrediente of ingredientes.controls; track $index) {
+        <div class="ingredient-row">
+          <input [formControlName]="$index" placeholder="Ex.: 1 lata de leite condensado" />
+          <button type="button" class="danger-button" (click)="removerIngrediente($index)" [disabled]="ingredientes.length === 1">Remover</button>
+        </div>
+        @if (ingrediente.invalid && (ingrediente.dirty || ingrediente.touched)) { <small>Ingrediente não pode ser vazio.</small> }
+      }
+    </div>
+    <button type="button" class="secondary-button" (click)="adicionarIngrediente()">Adicionar ingrediente</button>
+  </div>
+
+  <div class="field">
+    <label for="modoPreparo">Modo de preparo</label>
+    <textarea id="modoPreparo" rows="8" formControlName="modoPreparo" placeholder="Descreva o passo a passo da receita"></textarea>
+    @if (campoInvalido('modoPreparo')) { <small>Modo de preparo é obrigatório e deve ter no mínimo 10 caracteres.</small> }
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="primary-button" [disabled]="form.invalid || salvando">
+      {{ salvando ? 'Salvando...' : 'Salvar' }}
+    </button>
+  </div>
+</form>

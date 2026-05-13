@@ -1,0 +1,40 @@
+<section class="page-header">
+  <div>
+    <h1>Receitas cadastradas</h1>
+    <p>Busque, visualize e gerencie suas receitas culinárias.</p>
+  </div>
+  <a routerLink="/nova" class="primary-button">Cadastrar receita</a>
+</section>
+
+@if (sucesso()) {
+  <div class="alert success">{{ sucesso() }}</div>
+}
+
+@if (erro()) {
+  <div class="alert error">{{ erro() }}</div>
+}
+
+<div class="search-box">
+  <label for="busca">Buscar por nome</label>
+  <input id="busca" type="search" [ngModel]="busca()" (ngModelChange)="atualizarBusca($event)" placeholder="Ex.: Brigadeiro" />
+</div>
+
+@if (carregando()) {
+  <p class="muted">Carregando receitas...</p>
+} @else if (receitasFiltradas().length === 0) {
+  <div class="empty-state">
+    <strong>Nenhuma receita cadastrada</strong>
+    <span>Cadastre uma nova receita ou altere o termo da busca.</span>
+  </div>
+} @else {
+  <div class="cards-grid">
+    @for (receita of receitasFiltradas(); track receita.id) {
+      <article class="recipe-card">
+        <span class="badge">{{ receita.categoria }}</span>
+        <h2>{{ receita.nome }}</h2>
+        <p>{{ receita.tempoPreparo }} min • {{ receita.porcoes }} porções</p>
+        <a [routerLink]="['/receitas', receita.id]">Ver detalhes</a>
+      </article>
+    }
+  </div>
+}
